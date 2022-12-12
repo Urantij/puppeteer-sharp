@@ -64,7 +64,7 @@ namespace PuppeteerSharp
             if (!firefoxArgs.Contains("-profile") && !firefoxArgs.Contains("--profile"))
             {
                 tempUserDataDirectory = new TempDirectory();
-                CreateProfile(tempUserDataDirectory);
+                CreateProfile(tempUserDataDirectory, options.FirefoxPrefs);
                 firefoxArgs.Add("--profile");
                 firefoxArgs.Add($"{tempUserDataDirectory.Path.Quote()}");
             }
@@ -72,7 +72,7 @@ namespace PuppeteerSharp
             return (firefoxArgs, tempUserDataDirectory);
         }
 
-        private static void CreateProfile(TempDirectory tempUserDataDirectory)
+        private static void CreateProfile(TempDirectory tempUserDataDirectory, IDictionary<string, object> additionalPrefs)
         {
             var userJS = new List<string>();
             const string server = "dummy.test";
@@ -300,6 +300,11 @@ namespace PuppeteerSharp
                 // Prevent starting into safe mode after application crashes
                 ["toolkit.startup.max_resumed_crashes"] = -1,
             };
+
+            foreach (var pair in additionalPrefs)
+            {
+                defaultPreferences[pair.Key] = pair.Value;
+            }
 
             File.WriteAllText(
                 Path.Combine(tempUserDataDirectory.Path, "user.js"),

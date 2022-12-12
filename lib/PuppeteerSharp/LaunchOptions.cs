@@ -54,6 +54,11 @@ namespace PuppeteerSharp
         public string UserDataDir { get; set; }
 
         /// <summary>
+        /// Additional firefox prefs, if profile isnt set.
+        /// </summary>
+        public IDictionary<string, object> FirefoxPrefs { get; } = new Dictionary<string, object>();
+
+        /// <summary>
         /// Specify environment variables that will be visible to browser. Defaults to Environment variables.
         /// </summary>
         public IDictionary<string, string> Env { get; } = new Dictionary<string, string>();
